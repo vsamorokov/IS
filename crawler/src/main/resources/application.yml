@@ -13,7 +13,10 @@ spring:
       use-new-id-generator-mappings: false
 
 crawler:
-  max-depth: 2
+  max-depth: 1
   urls: https://www.7gy.ru/shkola/nachalnaya-shkola/1025-diktanty-i-teksty-dlya-spisyvaniya-bolshaya-bukva-v-imenakh-sobstvennykh.html,https://unetway.com/blog/,https://fluffynukeit.com/
 #  urls: https://www.7gy.ru/shkola/nachalnaya-shkola/1025-diktanty-i-teksty-dlya-spisyvaniya-bolshaya-bukva-v-imenakh-sobstvennykh.html
   names-to-exclude: герда,мурзик,максим,оля,катя,костя,эдик
+
+  metrics:
+    period: 1

@@ -16,4 +16,6 @@ public interface UrlRecordRepository extends JpaRepository<UrlRecord, Long> {
 
     @Query("select max(pageRank) from UrlRecord")
     Double findMaxPageRank();
+
+    long countAllByCrawledIsTrue();
 }

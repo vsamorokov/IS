@@ -36,9 +36,6 @@ class Searcher(
 
         val urls = wordsLocation.map { it.urlRecord }.distinct()
 
-
-        data class LocRowWithMetrics(val locationRow: WordsLocationRow, val m1: Double, val m2: Double, val m3: Double)
-
         val locationRows = urls.map mapUrl@{ url ->
             val locations = words.map { word ->
                 getLocations(url, word).ifEmpty { return@mapUrl emptyList() }
@@ -48,8 +45,9 @@ class Searcher(
 
         println(locationRows)
 
-
         val min = pageRankingService.getMinLocationScore(locationRows)
+
+        data class LocRowWithMetrics(val locationRow: WordsLocationRow, val m1: Double, val m2: Double, val m3: Double)
 
         val result = locationRows
             .map {
@@ -86,7 +84,7 @@ class Searcher(
                 .map { it.wordRecord }
                 .map {
                     if (words.any { w -> w.word.equals(it.word, true) }) {
-                        "<span style='background-color: ${wordToColor.computeIfAbsent(it.word) {getColor()}};'>${it.word}</span>"
+                        "<span style='background-color: ${wordToColor.computeIfAbsent(it.word) { getColor() }};'>${it.word}</span>"
                     } else it.word
                 }
                 .joinToString(separator = " ") { it }

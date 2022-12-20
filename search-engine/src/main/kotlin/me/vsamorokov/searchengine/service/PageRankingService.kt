@@ -46,8 +46,8 @@ class PageRankingService(
         log.info("Iteration finished. $count records updated")
     }
 
-    private fun getPart(urlRecord: UrlRecord): Double { // TODO: Cache count
-        val outgoingUrls = linkBetweenUrlRepository.countAllByFromUrl(urlRecord).let {
+    private fun getPart(urlRecord: UrlRecord): Double {
+        val outgoingUrls = withCache(urlRecord) { linkBetweenUrlRepository.countAllByFromUrl(urlRecord) }.let {
             if (it == 0L) {
                 log.error("No outgoing urls for urlRecord with id ${urlRecord.id}. Using 1")
                 1L
@@ -65,4 +65,12 @@ class PageRankingService(
 
     fun getNormalizedLocationScore(locationRow: WordsLocationRow, min: Int): Double =
         1.0 * min / locationRow.locations.sum()
+
+
+    private val cache = mutableMapOf<Long, Long>()
+
+    fun withCache(urlRecord: UrlRecord, f: (UrlRecord) -> Long): Long {
+        return cache.computeIfAbsent(urlRecord.id!!) { f(urlRecord) }
+    }
+
 }

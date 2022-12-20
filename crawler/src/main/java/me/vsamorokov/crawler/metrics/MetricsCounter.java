@@ -2,6 +2,8 @@ package me.vsamorokov.crawler.metrics;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import me.vsamorokov.data.repository.LinkBetweenUrlRepository;
 import me.vsamorokov.data.repository.UrlRecordRepository;
 import me.vsamorokov.data.repository.WordRecordRepository;
 import org.apache.commons.lang3.tuple.Pair;
@@ -12,12 +14,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class MetricsCounter {
 
     private final UrlRecordRepository urlRecordRepository;
     private final WordRecordRepository wordRecordRepository;
+    private final LinkBetweenUrlRepository linkBetweenUrlRepository;
 
     private final AtomicLong counter = new AtomicLong();
     private final List<Pair<Long, Long>> data = new ArrayList<>();
@@ -30,8 +34,9 @@ public class MetricsCounter {
             return;
         }
 
-        long urls = urlRecordRepository.count();
+        long urls = urlRecordRepository.countAllByCrawledIsTrue();
         long words = wordRecordRepository.count();
+        log.info("Urls {}, Words {}, Links {}", urls, words, linkBetweenUrlRepository.count());
         data.add(Pair.of(urls, words));
     }
 
